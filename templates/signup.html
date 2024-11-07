@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registration</title>
+    <link rel="stylesheet" href="./../static/css/bootstrap.min.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Warhammer:40KAsk</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Ask">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+      
+    </div>
+    <div class="row">
+      <div class="col-9">
+        <div id="errorAlert" class="alert alert-danger" style="display: none;">
+          <strong>Error:</strong> This email is already registered. Please use a different email.
+        </div>
+        <main class="container mt-3">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <h2 class="mb-4">Create an Account</h2>
+              <form id="registrationForm">
+                <div class="mb-3">
+                  <label for="login" class="form-label">Login</label>
+                  <input type="text" class="form-control" id="login" placeholder="Enter your login" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="nickname" class="form-label">NickName</label>
+                  <input type="text" class="form-control" id="nickname" placeholder="Enter your nickname" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="confirmPassword" class="form-label">Repeat Password</label>
+                  <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="avatar" class="form-label">Upload Avatar</label>
+                  <input type="file" class="form-control" id="avatar" accept="image/*">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Registration</button>
+              </form>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <div class="col">
+        <section class="mb-3">
+            <h2>Popular Tags</h2>
+            <div>
+                <span class="badge text-bg-primary">Primary</span>
+                <span class="badge text-bg-secondary">Secondary</span>
+                <span class="badge text-bg-success">Success</span>
+                <span class="badge text-bg-danger">Danger</span>
+                <span class="badge text-bg-warning">Warning</span>
+                <span class="badge text-bg-info">Info</span>
+                <span class="badge text-bg-light">Light</span>
+                <span class="badge text-bg-dark">Dark</span>
+            </div>
+        </section>
+
+        <section>
+            <h2>Member best</h2>
+            <div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><a href="#">Member</a></li>
+                    <li class="list-group-item"><a href="#">Member</a></li>
+                    <li class="list-group-item"><a href="#">Member</a></li>
+                    <li class="list-group-item"><a href="#">Member</a></li>
+                    <li class="list-group-item"><a href="#">Member</a></li>
+                    <li class="list-group-item"><a href="#">Member</a></li>
+
+                  </ul>
+            </div>
+        </section>
+    </div>
+    </div>
+
+    <script src="./../static/js/bootstrap.min.js"></script>
+    <script>
+      document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        if (email === "existing@example.com") { // Здесь проверяется, существует ли email
+          document.getElementById('errorAlert').style.display = 'block';
+        } else {
+          document.getElementById('errorAlert').style.display = 'none';
+          alert("Registration submitted successfully!");
+        }
+      });
+    </script>
+  </body>
+</html>
