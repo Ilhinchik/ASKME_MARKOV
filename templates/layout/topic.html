@@ -1,13 +1,38 @@
 {% if request.path == "/" %}
 <div class="d-flex gap-3 align-items-center">
-    <h1>New Questions</h1>
+    <h2>New Questions</h2>
     <a href="{% url 'hot' %}">Hot Questions</a>
   </div>
 
 {% elif request.path == "/hot/" %}
 <div class="d-flex gap-3 align-items-center">
-    <h1>Hot Questions</h1>
+    <h2>Hot Questions</h2>
     <a href="{% url 'index' %}">New Questions</a>
+</div>
+
+{% elif is_tag_page %}
+<div class="d-flex gap-3 align-items-center">
+  <h2>Tag: {{ tag_title }}</h2>
+</div>
+
+{% elif request.path == "/login/" %}
+<div class="d-flex gap-3 align-items-center">
+  <h2>Log In</h2>
+</div>
+
+{% elif request.path == "/signup/" %}
+<div class="d-flex gap-3 align-items-center">
+  <h2>Registration</h2>
+</div>
+
+{% elif request.path == "/ask/" %}
+<div class="d-flex gap-3 align-items-center">
+  <h2>New Question</h2>
+</div>
+
+{% elif is_question_page %}
+<div class="d-flex gap-3 align-items-center" style="visibility: hidden">
+  <h2>Log In</h2>
 </div>
 
 {% endif %}

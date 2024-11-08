@@ -13,16 +13,16 @@
                 <h5 class="card-title">
                     <a href="{% url 'question' question.id %}">{{ question.title }}</a>
                 </h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                <p class="card-text">{{ question.text }}</p>
+                <p class="card-text mb-2">{{ question.text }}</p>
 
                 <div class="d-flex gap-5">
-                    <a href="#" class="card-link">Answer(3)</a>
+                    <a href="#" class="card-link">Ответы({{ question.num_answers }})</a>
                 <div>
                     Tags:
                     {% for tag in question.tags %}
-                    <a href="#" class="badge bg-primary text-decoration-none">{{ tag }}</a>
-
+                    {% if tag %}
+                    <a href="{% url 'tag' tag %}" class="badge bg-primary text-decoration-none">{{ tag }}</a>
+                    {% endif %}
                     {% endfor %}
 
                 </div>

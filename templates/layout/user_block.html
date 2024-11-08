@@ -1,0 +1,23 @@
+{% if request.path == "/" or request.path == "/hot/" or is_tag_page %}
+<div class="d-flex gap-3" style="height: 45px">
+    <img src="static/images/profile.webp" alt="Avatar" class="">
+    <div>
+        <div>
+            dr pepper
+        </div>
+        <a href="#">settings</a>
+        <a href="#">log out</a>
+    </div>
+
+  </div>
+
+  {% else %}
+
+  <div class="d-flex gap-5">
+        <div>
+        <a href="#">log in</a>
+        <a href="#">register</a>
+    </div>
+</div>
+
+  {% endif %}

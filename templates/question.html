@@ -6,7 +6,7 @@
                 <div class="d-flex flex-column gap-3">
                     <div class="w-100" style="width: 18rem;">
                         <div class="">
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col-3">
                                     <div class="mb-2" style="height: 195px;">
                                         <img src="{{ question.image }}" alt="Avatar" class="img-thumbnail img-fluid">
@@ -16,12 +16,12 @@
                                 </div>
                                 <div class="col-9">
 
-                                    <h3 class="card-title">{{ question.title }}</h3>
-                                    <p class="card-text">{{ question.text }}</p>
+                                    <h4 class="card-title">{{ question.title }}</h4>
+                                    <p class="card-text mt-1">{{ question.text }}</p>
         
                                     <div>Tags:
                                       {% for tag in question.tags %}
-                                        <a href="#" class="badge bg-primary text-decoration-none">{{ tag }}</a>
+                                        <a href="{% url 'tag' tag %}" class="badge bg-primary text-decoration-none">{{ tag }}</a>
                                       {% endfor %}
                                       </div>
                                 </div>
@@ -30,48 +30,15 @@
                     </div>
                     <hr>
 
-                    <div class="card w-100" style="width: 18rem;">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-3">
-                                    <div class="border mb-2" style="height: 100px;">
-                                        <img src="image.jpg" alt="Avatar" class="img-thumbnail img-fluid">
-                                    </div>
-                                    <input type="number" class="form-control" value="5" placeholder="Default input" aria-label="default input example">
-
-                                </div>
-                                <div class="col-9">
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div>
-                                        <label><input type="checkbox"> Correct!</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% for answer in question.answers %}
+                        {% include 'layout/answer.html' %}
+                    {% endfor %}
 
                     <hr>
 
                     <textarea class="form-control my-3" rows="5" placeholder="Enter your answer here"></textarea>
                     <button class="btn btn-primary">Answer</button>
 
-                    <nav aria-label="Page navigation example" class="mt-3">
-                        <ul class="pagination">
-                          <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                              <span aria-hidden="true">&laquo;</span>
-                            </a>
-                          </li>
-                          <li class="page-item"><a class="page-link" href="#">1</a></li>
-                          <li class="page-item"><a class="page-link" href="#">2</a></li>
-                          <li class="page-item"><a class="page-link" href="#">3</a></li>
-                          <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                              <span aria-hidden="true">&raquo;</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </nav>
                     
 
                 </div>
