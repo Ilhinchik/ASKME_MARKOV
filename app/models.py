@@ -33,6 +33,10 @@ class Question(models.Model):
         # Получает количество лайков для вопроса, считая записи в QuestionLike
         return self.questionlike_set.count()
 
+    def ans_count(self):
+        # Получает количество ответов для вопроса, считая записи в Answer
+        return self.answer_set.count()
+    
     def __str__(self):
         return self.title
     
@@ -46,8 +50,10 @@ class Answer(models.Model):
     def likes_count(self):
         return self.answerlike_set.count()
     
+
+
     def __str__(self):
-        return f"Answer by {self.author} {self.id} on {self.question.title}"
+        return f"Answer by {self.author} on {self.question.title}"
 
 
 

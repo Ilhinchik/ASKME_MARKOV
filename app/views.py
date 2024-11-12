@@ -12,7 +12,7 @@ def index(request):
 
 
 def hot(request):
-    hot_questions = questions = Question.objects.hot()
+    hot_questions = Question.objects.hot()
     page = pag(request, hot_questions)
 
     context={'questions': page.object_list, 'page_obj': page}
@@ -21,7 +21,9 @@ def hot(request):
 
 def question(request, question_id):
     question = Question.objects.get(id=question_id)
-    context = {'question': question, 'is_question_page': True}
+    answers = question.answer_set.all()
+
+    context = {'question': question, 'is_question_page': True, 'answers': answers}
     return render(request, 'question.html', context)
 
 

@@ -5,7 +5,7 @@
                 <div class="mb-2" style="height: 195px;">
                     <img src="{{ question.image }}" alt="Avatar" class="img-thumbnail img-fluid">
                 </div>
-                <input type="number" class="form-control" value="5" placeholder="Default input" aria-label="default input example">
+                <input type="number" class="form-control" value="{{ question.likes_count }}" placeholder="Default input" aria-label="default input example">
 
             </div>
             <div class="col-9">
@@ -16,7 +16,7 @@
                 <p class="card-text mb-2">{{ question.text }}</p>
 
                 <div class="d-flex gap-5">
-                    <a href="#" class="card-link">Ответы({{ question.num_answers }})</a>
+                    <a href="#" class="card-link">Ответы({{ question.ans_count }})</a>
                 <div>
                     Tags:
                     {% for tag in question.tags.all %}
