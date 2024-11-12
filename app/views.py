@@ -119,90 +119,32 @@ questions = [
 
 
 def index(request):
-
-    page_num = int(request.GET.get('page', 1))
-    paginator = Paginator(questions, 3)
-
-    try:
-        page = paginator.page(page_num)
-
-    except PageNotAnInteger:
-        page = paginator.page(1)
-
-    except EmptyPage:
-        page = paginator.page(paginator.num_pages)
-
-    for question in questions:
-        question['num_answers'] = len(question['answers'])
-
-    context={
-        'questions': page.object_list,
-        'page_obj': page,
-        }
+    page = pag(request, questions)
+    context={'questions': page.object_list, 'page_obj': page}
     return render(request, 'index.html', context)
 
 def hot(request):
     hot_questions = copy.deepcopy(questions)
     hot_questions.reverse()
+    page = pag(request, hot_questions)
 
-    page_num = int(request.GET.get('page', 1))
-    paginator = Paginator(hot_questions, 3)
-
-    try:
-        page = paginator.page(page_num)
-
-    except PageNotAnInteger:
-        page = paginator.page(1)
-
-    except EmptyPage:
-        page = paginator.page(paginator.num_pages)
-
-    context={
-        'questions': page.object_list,
-        'page_obj': page
-        }
+    context={'questions': page.object_list,'page_obj': page}
     return render(request, 'hot.html', context)
 
 def question(request, question_id):
     question = questions[question_id]
-    context = {
-        'question': question,
-        'is_question_page': True,
-        }
+
+    context = {'question': question, 'is_question_page': True}
     return render(request, 'question.html', context)
 
-def search_tag(tag_title):
-    questions_tag = []
-    for question in questions:
-        for tag in question.get('tags', []):
-            if tag_title.lower() == tag.lower():
-                questions_tag.append(question)
-    
-    return questions_tag
 
 def tag(request, tag_title):
-
     questions_tag = search_tag(tag_title)
+    page = pag(request, questions_tag)
 
-    page_num = int(request.GET.get('page', 1))
-    paginator = Paginator(questions_tag, 3)
-
-    try:
-        page = paginator.page(page_num)
-
-    except PageNotAnInteger:
-        page = paginator.page(1)
-
-    except EmptyPage:
-        page = paginator.page(paginator.num_pages)
-
-    context={
-        'questions': page.object_list,
-        'page_obj': page,
-        'is_tag_page': True,
-        'tag_title': tag_title
-    }
+    context={'questions': page.object_list, 'page_obj': page, 'is_tag_page': True, 'tag_title': tag_title}
     return render(request, 'tagpage.html', context)
+
 
 def login(request):
     return render(request, 'login.html')
@@ -215,3 +157,28 @@ def ask(request):
 
 def setting(request):
     return render(request, 'setting.html')
+
+
+def pag(request, q):
+    page_num = int(request.GET.get('page', 1))
+    paginator = Paginator(q, 3)
+
+    try:
+        page = paginator.page(page_num)
+
+    except PageNotAnInteger:
+        page = paginator.page(1)
+
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+
+    return page
+
+def search_tag(tag_title):
+    questions_tag = []
+    for question in questions:
+        for tag in question.get('tags', []):
+            if tag_title.lower() == tag.lower():
+                questions_tag.append(question)
+    
+    return questions_tag
