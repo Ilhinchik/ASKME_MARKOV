@@ -30,11 +30,9 @@ class Question(models.Model):
     objects = QuestionManager()
 
     def likes_count(self):
-        # Получает количество лайков для вопроса, считая записи в QuestionLike
         return self.questionlike_set.count()
 
     def ans_count(self):
-        # Получает количество ответов для вопроса, считая записи в Answer
         return self.answer_set.count()
     
     def __str__(self):

@@ -6,66 +6,68 @@ from app.models import User, Profile, Question, Answer, Tag, QuestionLike, Answe
 def add_users(ratio):
     User.objects.create_superuser("ilha", "ilha@root.com", "ilha")
 
-    for i in range(ratio):
-        user = User.objects.create_user(f"user{i}", f"user{i}@user.com", f"user{i}")
-        Profile.objects.create(user=user, avatar='static/images/image.webp')
+    users = [User(username=f"user{i}", email=f"user{i}@user.com") for i in range(ratio)]
+    User.objects.bulk_create(users) 
+
+    profiles = [Profile(user=user, avatar='static/images/image.webp') for user in User.objects.filter(username__startswith="user")]
+    Profile.objects.bulk_create(profiles)
 
     print("Пользователи созданы")
 
 
 def add_tags(ratio):
-    for i in range(ratio):
-        Tag.objects.create(
-            title = f'tag{i}'
-        )
+    tags = [Tag(title=f'tag{i}') for i in range(ratio)]
+    Tag.objects.bulk_create(tags)  
     print("Тэги созданы")
 
 
 def add_questions(ratio, users, tags):
-    questions = []
-    for i in range(ratio * 10):
-        question = Question.objects.create(
+    questions = [
+        Question(
             title=f'Question {i}?',
             text='Some question text',
             author=random.choice(users)
-        )
+        ) for i in range(ratio * 10)
+    ]
+    Question.objects.bulk_create(questions)
+
+    questions = list(Question.objects.all())
+    for question in questions:
         question.tags.set(random.sample(tags, random.randint(2, min(5, len(tags)))))
-        questions.append(question)
+
     print("Вопросы созданы")
     return questions
 
 
 def add_answers(ratio, users, questions):
-    answers = []
-    for i in range(ratio * 100):
-        answer = Answer.objects.create(
+    answers = [
+        Answer(
             question=random.choice(questions),
             text='Some answer text.',
             author=random.choice(users)
-        )
-        answers.append(answer)
+        ) for i in range(ratio * 100)
+    ]
+    Answer.objects.bulk_create(answers) 
     print("Ответы созданы")
     return answers
 
 
 def add_question_likes(ratio, users, questions):
-    question_likes_count = ratio * 200 // 2
-    for _ in range(question_likes_count):
-        user = random.choice(users)
-        question = random.choice(questions)
-        QuestionLike.objects.get_or_create(user=user, question=question)
+    question_likes = [
+        QuestionLike(user=random.choice(users), question=random.choice(questions))
+        for _ in range(ratio * 200 // 2)
+    ]
+    QuestionLike.objects.bulk_create(question_likes, ignore_conflicts=True) 
     print("Лайки для вопросов созданы")
 
 
 def add_answer_likes(ratio, users, answers):
-    answer_likes_count = ratio * 200 - (ratio * 200 // 2)
-    for _ in range(answer_likes_count):
-        user = random.choice(users)
-        answer = random.choice(answers)
-        AnswerLike.objects.get_or_create(user=user, answer=answer)
+    answer_likes = [
+        AnswerLike(user=random.choice(users), answer=random.choice(answers))
+        for _ in range(ratio * 200 - (ratio * 200 // 2))
+    ]
+    AnswerLike.objects.bulk_create(answer_likes, ignore_conflicts=True)
     print("Лайки для ответов созданы")
-
-
 
 
 class Command(BaseCommand):
@@ -76,7 +78,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         ratio = options['ratio']
-
+    
         add_users(ratio)
         users = list(User.objects.all())
 
