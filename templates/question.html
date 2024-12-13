@@ -30,16 +30,19 @@
                     </div>
                     <hr>
 
-                    {% for answer in answers %}
-                        {% include 'layout/answer.html' %}
-                    {% endfor %}
-
-                    <hr>
-
                     <textarea class="form-control my-3" rows="5" placeholder="Enter your answer here"></textarea>
                     <button class="btn btn-primary">Answer</button>
 
                     <hr>
+
+                    {% for answer in answers %}
+                        {% include 'layout/answer.html' %}
+                    {% endfor %}
+
+                    {% include 'layout/paginator.html' %}
+
+                    <hr>
+                    
 
                     
 

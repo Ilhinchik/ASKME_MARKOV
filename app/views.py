@@ -23,7 +23,8 @@ def question(request, question_id):
     question = Question.objects.get(id=question_id)
     answers = question.answer_set.all()
 
-    context = {'question': question, 'is_question_page': True, 'answers': answers}
+    page = pag(request, answers)
+    context = {'question': question, 'is_question_page': True, 'answers': page.object_list, 'page_obj': page}
     return render(request, 'question.html', context)
 
 
