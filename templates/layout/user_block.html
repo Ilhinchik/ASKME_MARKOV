@@ -1,12 +1,14 @@
-{% if request.path == "/" or request.path == "/hot/" or is_tag_page %}
+{% if request.user.is_authenticated %}
 <div class="d-flex gap-3" style="height: 40px">
-    <img src="static/images/profile.webp" alt="Avatar" class="">
+    {% if user.profile.avatar %}
+    <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="">
+    {% endif %}
     <div>
         <div>
             dr pepper
         </div>
-        <a href="{% url 'setting' %}">settings</a>
-        <a href="#">log out</a>
+        <a href="{% url 'profile_edit' %}">profile_edit</a>
+        <a href="{% url 'logout' %}?next={{ request.path }}">log out</a>
     </div>
 
   </div>

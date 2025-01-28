@@ -6,25 +6,25 @@
     <div class="col-11">
       <main class="container mt-3">
         <div class="row justify-content-center">
-      <form>
+      <form action="{% url 'ask' %}" method='POST'>
         <div class="mb-3 row">
           <label for="questionTitle" class="col-sm-2 col-form-label">Title</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="questionTitle" placeholder="Enter your question title" required>
+            <input type="text" name="title" class="form-control" id="questionTitle" placeholder="Enter your question title" required>
           </div>
         </div>
 
         <div class="mb-3 row">
           <label for="questionText" class="col-sm-2 col-form-label">Text</label>
           <div class="col-sm-10">
-            <textarea class="form-control" id="questionText" rows="5" placeholder="Describe your question in detail" required></textarea>
+            <textarea class="form-control" name="text" id="questionText" rows="5" placeholder="Describe your question in detail" required></textarea>
           </div>
         </div>
 
         <div class="mb-3 row">
           <label for="questionTags" class="col-sm-2 col-form-label">Tags</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="questionTags" placeholder="Enter tags separated by commas">
+            <input type="text" class="form-control" name="tags" id="questionTags" placeholder="Enter tags separated by commas">
             <div class="form-text">Example: warhammer, space-marines, lore</div>
           </div>
         </div>

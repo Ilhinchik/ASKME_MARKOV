@@ -2,6 +2,12 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import *
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.contrib import auth
+from django.contrib.auth.decorators import login_required
+from .forms import *
 
 def index(request):
     questions = Question.objects.newest()
@@ -38,16 +44,65 @@ def tag(request, tag_title):
 
 
 def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = auth.authenticate(request, **form.cleaned_data)
+            if user:
+                auth.login(request, user)
+                return redirect(reverse(profile_edit))
+
     return render(request, 'login.html')
 
+
+def logout(request):
+    next_page = request.GET.get('next', reverse('login'))
+    auth.logout(request)
+    return redirect(next_page)
+
 def signup(request):
-    return render(request, 'signup.html')
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse(index))
+    else:
+        form = UserForm()
+
+    return render(request, 'signup.html', {"form": form})
 
 def ask(request):
+    user = request.user
+    if request.method == "POST":
+        form = QuestionAskForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.author = request.user
+            question.save()
+
+            # Обработка тегов
+            tags = form.cleaned_data.get('tags', '')
+            tag_list = [tag.strip() for tag in tags.split(',')]
+            for tag_name in tag_list:
+                tag, _ = Tag.objects.get_or_create(title=tag_name)
+                question.tags.add(tag)
+
+            return redirect('question', question_id=question.id)
     return render(request, 'newquestion.html')
 
-def setting(request):
-    return render(request, 'setting.html')
+@login_required
+def profile_edit(request):
+    user = request.user
+    profile, _ = Profile.objects.get_or_create(user=user)
+    if request.method == "POST":
+        form = ProfileEditForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('profile_edit'))
+    else:
+        form = ProfileEditForm(instance=profile)
+
+    return render(request, 'profile_edit.html', {"user": user, "form": form})
 
 
 

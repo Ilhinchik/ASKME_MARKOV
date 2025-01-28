@@ -4,54 +4,45 @@
 {% block content %}
   <div class="col-md-9">
     <div class="col-11">
-      <div id="errorAlert" class="alert alert-danger" style="display: none;">
-        <strong>Error:</strong> This email is already registered. Please use a different email.
-      </div>
+
       
       <main class="container mt-3">
         <div class="row justify-content-center">
-          <form id="registrationForm">
+          <form id="registrationForm" action="{% url 'signup' %}" method="POST">
             <div class="mb-3 row">
-              <label for="login" class="col-sm-2 col-form-label">Login</label>
+              <label for="username"  class="col-sm-2 col-form-label">Username</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="login" placeholder="Enter your login" required>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
               </div>
             </div>
 
             <div class="mb-3 row">
               <label for="email" class="col-sm-2 col-form-label">Email address</label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-              </div>
-            </div>
-
-            <div class="mb-3 row">
-              <label for="nickname" class="col-sm-2 col-form-label">NickName</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="nickname" placeholder="Enter your nickname" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
               </div>
             </div>
 
             <div class="mb-3 row">
               <label for="password" class="col-sm-2 col-form-label">Password</label>
               <div class="col-sm-10">
-                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
               </div>
             </div>
 
             <div class="mb-3 row">
               <label for="confirmPassword" class="col-sm-2 col-form-label">Repeat Password</label>
               <div class="col-sm-10">
-                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                <input type="password" class="form-control" id="confirmPassword" name="password_confirmation" placeholder="Confirm your password" required>
               </div>
             </div>
 
-            <div class="mb-3 row">
-              <label for="avatar" class="col-sm-2 col-form-label">Upload Avatar</label>
-              <div class="col-sm-10">
-                <input type="file" class="form-control" id="avatar" accept="image/*">
-              </div>
-            </div>
+<!--            <div class="mb-3 row">-->
+<!--              <label for="avatar" class="col-sm-2 col-form-label">Upload Avatar</label>-->
+<!--              <div class="col-sm-10">-->
+<!--                <input type="file" class="form-control" id="avatar" accept="image/*">-->
+<!--              </div>-->
+<!--            </div>-->
 
             <div class="row">
             <div class="col-sm-10 offset-sm-2">
@@ -64,18 +55,4 @@
       </main>
     </div>
   </div>
-
-  <script>
-    document.getElementById('registrationForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      const email = document.getElementById('email').value;
-      if (email === "existing@example.com") { // Здесь проверяется, существует ли email
-        document.getElementById('errorAlert').style.display = 'block';
-      } else {
-        document.getElementById('errorAlert').style.display = 'none';
-        alert("Registration submitted successfully!");
-      }
-    });
-  </script>
 {% endblock %}
