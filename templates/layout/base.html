@@ -37,14 +37,16 @@
                 <section class="mb-3">
                     <h2>Popular Tags</h2>
                     <div>
-                        <span class="badge text-bg-primary">Primary</span>
-                        <span class="badge text-bg-secondary">Secondary</span>
-                        <span class="badge text-bg-success">Success</span>
-                        <span class="badge text-bg-danger">Danger</span>
-                        <span class="badge text-bg-warning">Warning</span>
-                        <span class="badge text-bg-info">Info</span>
-                        <span class="badge text-bg-light">Light</span>
-                        <span class="badge text-bg-dark">Dark</span>
+                        {% for tag in tags %}
+                        <a href="{% url 'tag' tag %}" class="badge text-bg-primary text-decoration-none">{{ tag.title }}</a>
+<!--                        <span class="badge text-bg-secondary">Secondary</span>-->
+<!--                        <span class="badge text-bg-success">Success</span>-->
+<!--                        <span class="badge text-bg-danger">Danger</span>-->
+<!--                        <span class="badge text-bg-warning">Warning</span>-->
+<!--                        <span class="badge text-bg-info">Info</span>-->
+<!--                        <span class="badge text-bg-light">Light</span>-->
+<!--                        <span class="badge text-bg-dark">Dark</span>-->
+                        {% endfor %}
                     </div>
                 </section>
 
@@ -52,12 +54,9 @@
                     <h2>Member best</h2>
                     <div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><a href="#">Member</a></li>
-                            <li class="list-group-item"><a href="#">Member</a></li>
-                            <li class="list-group-item"><a href="#">Member</a></li>
-                            <li class="list-group-item"><a href="#">Member</a></li>
-                            <li class="list-group-item"><a href="#">Member</a></li>
-                            <li class="list-group-item"><a href="#">Member</a></li>
+                            {% for profile in top_users_profiles %}
+                            <li class="list-group-item">{{profile.user.username}}</li>
+                            {% endfor %}
 
                           </ul>
                     </div>

@@ -3,13 +3,21 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.forms import CharField, PasswordInput, ModelForm
 
-from app.models import Profile, Question
+from app.models import Profile, Question, Answer
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField()
-    confirm = forms.BooleanField()
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'})
+    )
+    confirm = forms.BooleanField(widget=forms.CheckboxInput)
+
+    def clean_username(self):
+        return self.cleaned_data['username'].strip()
+    
 
 class UserForm(forms.ModelForm):
 
@@ -74,3 +82,24 @@ class QuestionAskForm(forms.ModelForm):
     class Meta:
         model = Question
         fields=['title', 'text', 'tags']
+
+class AnswerForm(forms.ModelForm):
+    text = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control my-3', 'placeholder': 'Enter your answer here', 'rows': '5'}),
+    )
+
+    class Meta:
+        model = Answer
+        fields = ['text']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.question_id = kwargs.pop('question_id', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        question = Question.objects.get(pk=self.question_id)
+        answer = Answer(author=self.user, question=question, text=self.cleaned_data.get('text'))
+        if commit:
+            answer.save()
+        return answer

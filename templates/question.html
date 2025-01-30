@@ -4,6 +4,9 @@
 <div class="col-md-9">
             <div class="col-11">
                 <div class="d-flex flex-column gap-3">
+                    <form action="{% url 'question' question.id %}" method="POST">
+                                          {% csrf_token %}
+
                     <div class="w-100" style="width: 18rem;">
                         <div class="">
                             <div class="row mt-3">
@@ -30,10 +33,11 @@
                     </div>
                     <hr>
 
-                    <textarea class="form-control my-3" rows="5" placeholder="Enter your answer here"></textarea>
+                    <textarea name='text' class="form-control my-3" rows="5" placeholder="Enter your answer here"></textarea>
                     <button class="btn btn-primary">Answer</button>
 
                     <hr>
+                    </form>
 
                     {% for answer in answers %}
                         {% include 'layout/answer.html' %}

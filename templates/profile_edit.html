@@ -5,7 +5,9 @@
   <div class="col-11">
     <main class="container mt-3">
       <div class="row justify-content-center">
-        <form id="settingsForm" action="{% url 'profile_edit' %}" method='GET' enctype="multipart/form-data">
+        <form id="settingsForm" action="{% url 'profile_edit' %}" method='POST' enctype="multipart/form-data">
+          {% csrf_token %}
+
           <!-- Поле для логина -->
           <div class="mb-3 row">
             <label for="login" class="col-sm-2 col-form-label">Username</label>

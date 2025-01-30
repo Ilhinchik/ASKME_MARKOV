@@ -16,7 +16,7 @@
                 <p class="card-text mb-2">{{ question.text }}</p>
 
                 <div class="d-flex gap-5">
-                    <a href="#" class="card-link">Ответы({{ question.ans_count }})</a>
+                    <p href="#" class="card-link">Answers({{ question.ans_count }})</p>
                 <div>
                     Tags:
                     {% for tag in question.tags.all %}
