@@ -1,12 +1,14 @@
 <div class="card w-100" style="width: 18rem;">
-    <div class="card-body">
+    <div class="card-body question-card" data-question-id="{{question.id}}" data-is-liked="{{ question.is_liked }}">
         <div class="row">
             <div class="col-3">
                 <div class="mb-2" style="height: 195px;">
-                    <img src="{{ question.image }}" alt="Avatar" class="img-thumbnail img-fluid">
+                    <img src="{{ question.author.profile.avatar.url }}" alt="Avatar" class="img-thumbnail img-fluid">
                 </div>
-                <input type="number" class="form-control" value="{{ question.likes_count }}" placeholder="Default input" aria-label="default input example">
-
+                <button class="like-button">
+                            <span class="heart"></span>
+                            <span class="like-count">{{ question.likes_count }}</span>
+                </button>
             </div>
             <div class="col-9">
 
@@ -21,7 +23,7 @@
                     Tags:
                     {% for tag in question.tags.all %}
                     {% if tag %}
-                    <a href="{% url 'tag' tag %}" class="badge bg-primary text-decoration-none">{{ tag }}</a>
+                    <a href="{% url 'tag' tag %}" class="card-link">{{ tag }}</a>
                     {% endif %}
                     {% endfor %}
 

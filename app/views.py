@@ -1,6 +1,9 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.db.models import Exists, OuterRef
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.http import require_POST
+
 from .models import *
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
@@ -18,6 +21,13 @@ def get_base_context():
 
 def index(request):
     questions = Question.objects.newest()
+
+    if request.user.is_authenticated:
+        questions = questions.annotate(
+            is_liked=Exists(
+                QuestionLike.objects.filter(user=request.user, question=OuterRef('pk'))
+            )
+        )
     page = pag(request, questions)
 
     context={'questions': page.object_list, 'page_obj': page}
@@ -36,8 +46,17 @@ def hot(request):
 
 def question(request, question_id):
     user = request.user
+    is_liked = False
     question = Question.objects.get(id=question_id)
     answers = question.answers.order_by('-created_at', '-id')
+    if request.user.is_authenticated:
+        is_liked = QuestionLike.objects.filter(user=request.user, question=question).exists()
+        answers = answers.annotate(
+            is_liked=Exists(
+                AnswerLike.objects.filter(user=request.user, answer=OuterRef('pk'))
+            )
+        )
+
     if request.method == 'POST':
         print("POST данные:", request.POST)
         if not request.user.is_authenticated:
@@ -49,6 +68,7 @@ def question(request, question_id):
 
     page = pag(request, answers)
     context = {'question': question, 'is_question_page': True, 'answers': page.object_list, 'page_obj': page}
+    context['is_liked'] = is_liked
     context.update(get_base_context())
     return render(request, 'question.html', context)
 
@@ -56,6 +76,13 @@ def question(request, question_id):
 def tag(request, tag_title):
     tag = Tag.objects.get(title=tag_title)
     questions = Question.objects.tagged(tag.title)
+
+    if request.user.is_authenticated:
+        questions = questions.annotate(
+            is_liked=Exists(
+                QuestionLike.objects.filter(user=request.user, question=OuterRef('pk'))
+            )
+        )
 
     page = pag(request, questions)
     context={'questions': page.object_list, 'page_obj': page, 'is_tag_page': True, 'tag_title': tag_title}
@@ -132,7 +159,56 @@ def profile_edit(request):
     context.update(get_base_context())
     return render(request, 'profile_edit.html', context)
 
+@require_POST
+def question_like(request, question_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
 
+    question = get_object_or_404(Question, pk=question_id)
+    like, like_created = QuestionLike.objects.get_or_create(user=request.user, question=question)
+
+    liked = True
+    if not like_created:
+        like.delete()
+        liked = False
+
+    question.save()
+    return JsonResponse(
+        {'question_likes_count': QuestionLike.objects.filter(question=question).count(), 'liked': liked})
+
+@require_POST
+def answer_like(request, answer_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+
+    answer = get_object_or_404(Answer, pk=answer_id)
+    like, like_created = AnswerLike.objects.get_or_create(user=request.user, answer=answer)
+
+    liked = True
+    if not like_created:
+        like.delete()
+        liked = False
+
+    answer.save()
+    return JsonResponse({'answer_likes_count': AnswerLike.objects.filter(answer=answer).count(), 'liked': liked})
+
+@require_POST
+def helpful_answer(request, answer_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if answer.question.author != request.user:
+        return JsonResponse({'error': 'Permission denied'}, status=403)
+
+    if answer.helpful:
+        answer.helpful = False
+    else:
+        answer.helpful = True
+
+    answer.save()
+
+    return JsonResponse({'helpful': answer.helpful}, status=200)
 
 def pag(request, q):
     page_num = int(request.GET.get('page', 1))

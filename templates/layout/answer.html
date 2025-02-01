@@ -1,17 +1,36 @@
+{% load static %}
 <div class="card w-100" style="width: 18rem;">
-    <div class="card-body">
+    <div class="card-body answer-card" id="answer-{{ answer.pk }}" data-is-liked="{{ answer.is_liked }}">
         <div class="row">
             <div class="col-3">
                 <div class="border mb-2" style="height: 100px;">
-                    <img src="image.jpg" alt="Avatar" class="img-thumbnail img-fluid">
+                    <img src="{{ answer.author.profile.avatar.url}}" alt="Avatar" class="img-thumbnail img-fluid h-100 w-100 object-fit-cover">
                 </div>
-                <input type="number" class="form-control" value="{{ answer.likes_count }}" placeholder="Default input" aria-label="default input example">
-
+                <button class="like-button">
+                            <span class="heart"></span>
+                            <span class="like-count">{{ answer.likes_count }}</span>
+                         </button>
             </div>
             <div class="col-9">
                 <p class="card-text">{{ answer.text }}</p>
                 <div>
-                    <label><input type="checkbox" checked> Correct!</label>
+                     {% if user.is_authenticated and user == answer.question.author %}
+                                <input type="checkbox" class="m-0 form-check-input" id="checkbox-{{ answer.id }}" {% if answer.helpful %}checked{% endif %}>
+                                <label class="helpful-label form-check-label" for="checkbox-{{ answer.id }}">
+                                    {% if answer.helpful %}
+                                        It was helpful!
+                                    {% else %}
+                                        Not checked
+                                    {% endif %}
+                                </label>
+                            {% else %}
+                                {% if answer.helpful %}
+                                    <div class="d-flex align-items-center">
+                                        <img src="{% static 'images/answer_check_mark.png' %}" alt="CheckMark" class="me-3" style="width: 20px; height: 20px;">
+                                        <p class="mb-0">It was helpful!</p>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
                 </div>
             </div>
         </div>

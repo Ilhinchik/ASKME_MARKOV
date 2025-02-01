@@ -29,7 +29,10 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('signup/', views.signup, name='signup'),
     path('ask/', views.ask, name='ask'),
+    path('question_like/<int:question_id>/', views.question_like, name='question_like'),
+    path('answer_like/<int:answer_id>/', views.answer_like, name='answer_like'),
     path('profile_edit/', views.profile_edit, name='profile_edit'),
+    path('helpful_answer/<int:answer_id>/', views.helpful_answer, name='helpful_answer'),
     path('admin/', admin.site.urls),
 ]
 

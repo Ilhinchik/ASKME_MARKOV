@@ -29,7 +29,7 @@ class QuestionManager(models.Manager):
 
 class Question(models.Model):
     title = models.CharField(max_length=255)
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField(blank=True)
     tags = models.ManyToManyField(Tag, related_name="questions")
@@ -49,8 +49,9 @@ class Question(models.Model):
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
     text = models.TextField(blank=True)
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='answers')
+    helpful = models.BooleanField(default=False)
 
     def likes_count(self):
         return self.likes.count()
@@ -81,7 +82,7 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, default='default_profile.png')
 
     objects = ProfileManager()
 
